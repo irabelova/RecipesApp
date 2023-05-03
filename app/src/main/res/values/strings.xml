@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Recipes</string>
+    <string name="bottom_navigation_recipes">Рецепты</string>
+    <string name="bottom_navigation_search">Поиск</string>
+    <string name="bottom_navigation_favorites">Избранное</string>
+    <string name="bottom_navigation_add_recipe">Добавить</string>
+    <string name="status_image">status_image</string>
+    <string name="ready_in_minutes">время приготовления %d минут</string>
+</resources>
