@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="MissingDefaultResource">
+    <item
+        android:id="@+id/like_item"
+        android:icon="@drawable/ic_like"
+        app:showAsAction="always"
+        android:title="@string/toolbar_like" />
+</menu>

@@ -5,5 +5,10 @@
     <string name="bottom_navigation_favorites">Избранное</string>
     <string name="bottom_navigation_add_recipe">Добавить</string>
     <string name="status_image">status_image</string>
-    <string name="ready_in_minutes">время приготовления %d минут</string>
+    <string name="ready_in_minutes">Время приготовления: %d минут</string>
+    <string name="fab">FAB</string>
+    <string name="extended_ingredients_name">Список ингредиентов:</string>
+    <string name="instructions_name">Как приготовить:</string>
+    <string name="recipe_photo">recipe_photo</string>
+    <string name="toolbar_like">Toolbar like</string>
 </resources>

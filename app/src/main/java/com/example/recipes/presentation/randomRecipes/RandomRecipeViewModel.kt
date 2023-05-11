@@ -28,7 +28,7 @@ class RandomRecipeViewModel (private val repository: Repository) : ViewModel() {
         }
     }
 
-    class RecipeFactory(private val repository: Repository) : ViewModelProvider.Factory {
+    class RandomRecipeFactory(private val repository: Repository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return RandomRecipeViewModel(repository) as T
 

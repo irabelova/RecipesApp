@@ -13,13 +13,14 @@ import com.example.recipes.domain.RapidApiSource
 import com.example.recipes.domain.Repository
 import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDtoMapper
+import com.example.recipes.presentation.recipe.RecipeFragment
 
 class RandomRecipeFragment: Fragment() {
     private lateinit var binding: RandomRecipeFragmentBinding
     private val viewModel: RandomRecipeViewModel by viewModels {
-        RandomRecipeViewModel.RecipeFactory(
+        RandomRecipeViewModel.RandomRecipeFactory(
 //            Repository(RapidApiSource(retrofitService, RecipeDtoMapper()))
-        Repository(FakeDataSource())
+            Repository(FakeDataSource())
         )
     }
 
@@ -31,9 +32,15 @@ class RandomRecipeFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter =  RandomRecipeAdapter{
-
+        val adapter = RandomRecipeAdapter {
+            parentFragmentManager.beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.container, RecipeFragment.newInstance(it.id))
+                .commit()
         }
+
+
+
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 RandomRecipeUiModel.Loading -> {
@@ -50,13 +57,6 @@ class RandomRecipeFragment: Fragment() {
                     binding.statusImage.setImageResource(R.drawable.ic_connection_error)
                 }
             }
-        }
-    }
-
-
-    companion object {
-        fun newInstance(): RandomRecipeFragment {
-            return RandomRecipeFragment()
         }
     }
 }
