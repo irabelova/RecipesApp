@@ -7,4 +7,6 @@ interface BaseDataSource {
     suspend fun getRandomRecipe(): List<Recipe>
 
     suspend fun getRecipeById(id: Int): Recipe
+
+    suspend fun getRecipeByRequest(title: String): List<Recipe>
 }

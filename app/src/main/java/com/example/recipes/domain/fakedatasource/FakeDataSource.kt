@@ -71,4 +71,9 @@ class FakeDataSource : BaseDataSource {
         delay(1000)
         return list.first { it.id == id }
     }
+
+    override suspend fun getRecipeByRequest(title: String): List<Recipe> {
+        delay(1000)
+        return list.filter { it.title.contains(title, ignoreCase = true) }
+    }
 }

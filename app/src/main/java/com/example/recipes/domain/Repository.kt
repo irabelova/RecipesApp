@@ -9,4 +9,8 @@ class Repository (private val baseDataSource: BaseDataSource) {
     suspend fun getRecipeById(id: Int): Recipe {
         return baseDataSource.getRecipeById(id)
     }
+
+    suspend fun getRecipeByRequest(title: String): List<Recipe> {
+        return baseDataSource.getRecipeByRequest(title)
+    }
 }

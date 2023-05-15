@@ -11,4 +11,7 @@
     <string name="instructions_name">Как приготовить:</string>
     <string name="recipe_photo">recipe_photo</string>
     <string name="toolbar_like">Toolbar like</string>
+    <string name="Pasta_with_salmon">Паста с лососем</string>
+    <string name="Search">Поиск</string>
+    <string name="search_image">search_image</string>
 </resources>

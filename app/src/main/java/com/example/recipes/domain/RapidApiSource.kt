@@ -18,4 +18,12 @@ class RapidApiSource (
         val recipe = retrofitService.getRecipe(id)
         return recipeDtoMapper.recipeDtoToRecipe(recipe)
     }
+
+    override suspend fun getRecipeByRequest(title: String): List<Recipe> {
+        val recipeListDto = retrofitService.getRecipeByRequest(title = title)
+        val recipeByRequestList = recipeDtoMapper.recipeListDtoToRecipesByRequest(recipeListDto)
+        return recipeByRequestList.map {
+            getRecipeById(it.id)
+        }
+    }
 }
