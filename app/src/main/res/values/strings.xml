@@ -14,4 +14,6 @@
     <string name="Pasta_with_salmon">Паста с лососем</string>
     <string name="Search">Поиск</string>
     <string name="search_image">search_image</string>
+    <string name="save_error">Ошибка сохранения</string>
+    <string name="delete_error">Ошибка удаления</string>
 </resources>

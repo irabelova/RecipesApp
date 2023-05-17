@@ -9,17 +9,31 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.recipes.R
+import com.example.recipes.RecipeApplication
 import com.example.recipes.databinding.RandomRecipeFragmentBinding
+import com.example.recipes.domain.RecipeDataSource
 import com.example.recipes.domain.Repository
 import com.example.recipes.domain.fakedatasource.FakeDataSource
+import com.example.recipes.domain.mappers.RecipeDbMapper
 import com.example.recipes.presentation.recipe.RecipeFragment
 
 class RandomRecipeFragment : Fragment() {
     private lateinit var binding: RandomRecipeFragmentBinding
     private val viewModel: RandomRecipeViewModel by viewModels {
         RandomRecipeViewModel.RandomRecipeFactory(
-//            Repository(RapidApiSource(retrofitService, RecipeDtoMapper()))
-            Repository(FakeDataSource())
+//            Repository(
+//                RapidApiSource(retrofitService, RecipeDtoMapper()),
+//                RecipeDataSource(
+//                    (activity?.application as RecipeApplication).database.recipeDao(),
+//                    RecipeDbMapper()
+//                )
+//            ),
+            Repository(
+                FakeDataSource(), RecipeDataSource(
+                    (activity?.application as RecipeApplication).database.recipeDao(),
+                    RecipeDbMapper()
+                )
+            )
         )
     }
 

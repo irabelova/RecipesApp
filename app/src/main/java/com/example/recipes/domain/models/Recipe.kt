@@ -6,5 +6,6 @@ data class Recipe (
         val image: String?,
         val instructions: String,
         val readyInMinutes: Int,
-        val extendedIngredients: List<Ingredient>
+        val extendedIngredients: List<Ingredient>,
+        val isSaved: Boolean = false
         )
