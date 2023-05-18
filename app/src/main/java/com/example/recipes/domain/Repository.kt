@@ -5,16 +5,24 @@ import com.example.recipes.domain.models.Recipe
 class Repository (
     private val baseDataSource: BaseDataSource,
     private val saveDataSource: SaveDataSource) {
-    suspend fun getRandomRecipe(): List<Recipe> {
-        return baseDataSource.getRandomRecipe()
+    suspend fun getRandomRecipe(showOnlySaved: Boolean): List<Recipe> {
+        return if (showOnlySaved) {
+            saveDataSource.getRandomRecipe()
+        } else {
+            baseDataSource.getRandomRecipe()
+        }
     }
     suspend fun getRecipeById(id: Int): Recipe {
         val recipe = saveDataSource.getRecipeById(id) ?: baseDataSource.getRecipeById(id)
         return recipe ?: throw IllegalArgumentException()
     }
 
-    suspend fun getRecipeByRequest(title: String): List<Recipe> {
-        return baseDataSource.getRecipeByRequest(title)
+    suspend fun getRecipeByRequest(title: String, showOnlySaved: Boolean): List<Recipe> {
+        return if (showOnlySaved) {
+            saveDataSource.getRecipeByRequest(title)
+        } else {
+            baseDataSource.getRecipeByRequest(title)
+        }
     }
     suspend fun saveRecipe (recipe: Recipe) {
         return saveDataSource.saveRecipe(recipe)

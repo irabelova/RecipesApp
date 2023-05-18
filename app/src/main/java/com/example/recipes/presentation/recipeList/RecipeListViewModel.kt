@@ -1,4 +1,4 @@
-package com.example.recipes.presentation.randomRecipes
+package com.example.recipes.presentation.recipeList
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @OptIn(FlowPreview::class)
-class RandomRecipeViewModel (private val repository: Repository) : ViewModel() {
+class RecipeListViewModel(private val repository: Repository, private val showOnlySaved: Boolean) : ViewModel() {
 
-    private val _state = MutableLiveData<RandomRecipeUiModel>()
-    val state: LiveData<RandomRecipeUiModel> = _state
+    private val _state = MutableLiveData<RecipeListUiModel>()
+    val state: LiveData<RecipeListUiModel> = _state
 
     private val searchQuery = MutableStateFlow("")
 
@@ -26,19 +26,19 @@ class RandomRecipeViewModel (private val repository: Repository) : ViewModel() {
     }
 
     fun setTitle(title: String) {
-           searchQuery.value = title
+        searchQuery.value = title
     }
 
-    private fun getRecipe() {
+     fun getRecipe() {
         viewModelScope.launch {
-            _state.value = RandomRecipeUiModel.Loading
+            _state.value = RecipeListUiModel.Loading
             try {
-                _state.value = RandomRecipeUiModel.Data(
-                    repository.getRandomRecipe()
+                _state.value = RecipeListUiModel.Data(
+                    repository.getRandomRecipe(showOnlySaved)
                 )
             } catch (e: Exception) {
                 Log.e("RecipeViewModel", "", e)
-                _state.value = RandomRecipeUiModel.Error
+                _state.value = RecipeListUiModel.Error
             }
         }
     }
@@ -46,17 +46,17 @@ class RandomRecipeViewModel (private val repository: Repository) : ViewModel() {
     private fun collectQueryFlow() {
         viewModelScope.launch {
             queryFlow.collectLatest {
-                if(it.length > 2) {
-                    _state.value = RandomRecipeUiModel.Loading
+                if (it.length > 2) {
+                    _state.value = RecipeListUiModel.Loading
                     try {
-                        _state.value = RandomRecipeUiModel.Data(
-                            repository.getRecipeByRequest(it)
+                        _state.value = RecipeListUiModel.Data(
+                            repository.getRecipeByRequest(it, showOnlySaved)
                         )
                     } catch (e: Exception) {
                         Log.e("RecipeViewModel", "", e)
-                        _state.value = RandomRecipeUiModel.Error
+                        _state.value = RecipeListUiModel.Error
                     }
-                }else if(it.isEmpty()) {
+                } else if (it.isEmpty()) {
                     getRecipe()
                 }
             }
@@ -65,9 +65,9 @@ class RandomRecipeViewModel (private val repository: Repository) : ViewModel() {
     }
 
 
-    class RandomRecipeFactory(private val repository: Repository) : ViewModelProvider.Factory {
+    class RandomRecipeFactory(private val repository: Repository, private val fragmentFlag: Boolean) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RandomRecipeViewModel(repository) as T
+            return RecipeListViewModel(repository, fragmentFlag) as T
 
         }
     }

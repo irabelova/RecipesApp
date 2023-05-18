@@ -1,12 +1,15 @@
 package com.example.recipes.presentation.recipe
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.core.view.isVisible
 import coil.load
 import com.example.recipes.R
 import com.example.recipes.RecipeApplication
@@ -90,6 +93,9 @@ class RecipeFragment() : Fragment() {
                 Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG)
                     .show()
         }
+        viewModel.deleteEvent.observe(viewLifecycleOwner) {
+            parentFragmentManager.setFragmentResult(DELETE_RECIPE_REQUEST_KEY, bundleOf())
+        }
         binding.fab.setOnClickListener {
             viewModel.saveOrDeleteRecipe()
         }
@@ -121,6 +127,7 @@ class RecipeFragment() : Fragment() {
 
     companion object {
         private const val ID_KEY = "ID_KEY"
+        const val DELETE_RECIPE_REQUEST_KEY = "DELETE_RECIPE_REQUEST_KEY"
         fun newInstance(id: Int): RecipeFragment {
             val recipeFragment = RecipeFragment()
             recipeFragment.arguments = bundleOf(

@@ -30,8 +30,9 @@ class RecipeDataSource(
 
     override suspend fun deleteRecipe(recipe: Recipe) {
         val recipeWithIngredients = recipeDbMapper.recipeToRecipeWithIngredients(recipe)
-        val ingredientsIds = recipeWithIngredients.ingredientsDb.map{
-            it.ingredientsId.toLong()}
+        val ingredientsIds = recipeWithIngredients.ingredientsDb.map {
+            it.ingredientsId.toLong()
+        }
         ingredientsIds.forEach {
             recipeDao.deleteRecipeIngredientsCrossRef(
                 RecipeIngredientsCrossRef(
@@ -46,9 +47,9 @@ class RecipeDataSource(
         }
     }
 
-    override suspend fun getRandomRecipe(): List<Recipe> {
+    override suspend fun getRandomRecipe(): List<Recipe> = withContext(Dispatchers.IO) {
         val recipeWithIngredients = recipeDao.getRecipesWithIngredients()
-        return recipeWithIngredients.map {
+        return@withContext recipeWithIngredients.map {
             recipeDbMapper.recipeWithIngredientsToRecipe(it)
         }
     }
@@ -58,10 +59,13 @@ class RecipeDataSource(
         recipe?.let {
             recipeDbMapper.recipeWithIngredientsToRecipe(it)
         }
-
     }
 
-    override suspend fun getRecipeByRequest(title: String): List<Recipe> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getRecipeByRequest(title: String): List<Recipe> =
+        withContext(Dispatchers.IO) {
+            val recipeListDb = recipeDao.getRecipeByRequest(title)
+            recipeListDb.map {
+                recipeDbMapper.recipeWithIngredientsToRecipe(it)
+            }
+        }
 }

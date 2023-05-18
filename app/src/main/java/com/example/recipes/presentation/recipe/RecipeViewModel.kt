@@ -18,6 +18,9 @@ class RecipeViewModel(private val repository: Repository, private val id: Int) :
     private val _errorOfSave = SingleLiveEvent<Int>()
     val errorOfSave: LiveData<Int> = _errorOfSave
 
+    private val _deleteEvent = SingleLiveEvent<Unit>()
+    val deleteEvent: LiveData<Unit> = _deleteEvent
+
     init {
         getRecipeById()
     }
@@ -75,6 +78,7 @@ class RecipeViewModel(private val repository: Repository, private val id: Int) :
             try {
                 repository.deleteRecipe(data.recipe)
                 _state.value = data.copy(recipe = data.recipe.copy(isSaved = false))
+                _deleteEvent.call()
             } catch (e: Exception) {
                 _errorOfSave.value = R.string.delete_error
             }

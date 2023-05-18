@@ -13,6 +13,10 @@ interface RecipeDao {
     @Query ("SELECT * FROM Recipe WHERE recipeId = :id")
     fun getRecipeById(id: Int): RecipeWithIngredients?
 
+    @Transaction
+    @Query ("SELECT * FROM Recipe WHERE title LIKE '%' || :title || '%'")
+    fun getRecipeByRequest(title: String): List<RecipeWithIngredients>
+
     @Insert
     suspend fun insertRecipe (recipeDb: RecipeDb): Long
 

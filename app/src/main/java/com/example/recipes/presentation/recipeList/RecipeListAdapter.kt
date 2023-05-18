@@ -1,4 +1,4 @@
-package com.example.recipes.presentation.randomRecipes
+package com.example.recipes.presentation.recipeList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,8 +10,8 @@ import com.example.recipes.R
 import com.example.recipes.databinding.ViewItemBinding
 import com.example.recipes.domain.models.Recipe
 
-class RandomRecipeAdapter (private val clickListener: (Recipe) -> Unit) :
-    ListAdapter<Recipe, RandomRecipeAdapter.RandomRecipeViewHolder>(DiffCallback) {
+class RecipeListAdapter (private val clickListener: (Recipe) -> Unit) :
+    ListAdapter<Recipe, RecipeListAdapter.RandomRecipeViewHolder>(DiffCallback) {
 
     class RandomRecipeViewHolder(
         private val binding: ViewItemBinding
