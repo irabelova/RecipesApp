@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.recipes.databinding.ActivityMainBinding
+import com.example.recipes.presentation.addAndEditRecipe.AddAndEditRecipeFragment
 import com.example.recipes.presentation.recipeList.RecipeListFragment
 
 
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         val newFragment: Fragment = when (position) {
             Position.RECIPES -> RecipeListFragment.newInstance(false)
             Position.SEARCH -> RecipeListFragment.newInstance(false)
-            Position.ADD -> RecipeListFragment.newInstance(false)
+            Position.ADD -> AddAndEditRecipeFragment()
             Position.FAVORITES_RECIPES -> RecipeListFragment.newInstance(true)
         }
        supportFragmentManager.beginTransaction()

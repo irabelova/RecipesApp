@@ -20,7 +20,7 @@ import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDbMapper
 
 
-class RecipeFragment() : Fragment() {
+class RecipeFragment : Fragment() {
     private lateinit var binding: RecipeFragmentBinding
     private var menu: Menu? = null
     private val viewModel: RecipeViewModel by viewModels() {
@@ -38,7 +38,7 @@ class RecipeFragment() : Fragment() {
                     RecipeDbMapper()
                 )
             ),
-            requireArguments().getInt(ID_KEY)
+            requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
         )
     }
 
@@ -126,12 +126,12 @@ class RecipeFragment() : Fragment() {
     }
 
     companion object {
-        private const val ID_KEY = "ID_KEY"
+        private const val RECIPE_ARGUMENTS_KEY = "RECIPE_ARGUMENTS_KEY"
         const val DELETE_RECIPE_REQUEST_KEY = "DELETE_RECIPE_REQUEST_KEY"
-        fun newInstance(id: Int): RecipeFragment {
+        fun newInstance(recipeArguments: RecipeArguments): RecipeFragment {
             val recipeFragment = RecipeFragment()
             recipeFragment.arguments = bundleOf(
-                ID_KEY to id
+                RECIPE_ARGUMENTS_KEY to recipeArguments
             )
             return recipeFragment
         }

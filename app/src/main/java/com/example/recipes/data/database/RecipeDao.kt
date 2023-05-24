@@ -20,7 +20,7 @@ interface RecipeDao {
     @Insert
     suspend fun insertRecipe (recipeDb: RecipeDb): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIngredient (ingredientsDb: IngredientsDb): Long
 
     @Insert

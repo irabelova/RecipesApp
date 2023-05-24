@@ -12,9 +12,14 @@ class Repository (
             baseDataSource.getRandomRecipe()
         }
     }
-    suspend fun getRecipeById(id: Int): Recipe {
-        val recipe = saveDataSource.getRecipeById(id) ?: baseDataSource.getRecipeById(id)
-        return recipe ?: throw IllegalArgumentException()
+    suspend fun getRecipeById(id: Int, isFromApiSource: Boolean): Recipe {
+        return if (isFromApiSource) {
+            val recipe = saveDataSource.getRecipeById(id) ?: baseDataSource.getRecipeById(id)
+            recipe ?: throw IllegalArgumentException()
+        } else {
+            val recipe = saveDataSource.getRecipeById(id)
+            recipe ?: throw IllegalArgumentException()
+        }
     }
 
     suspend fun getRecipeByRequest(title: String, showOnlySaved: Boolean): List<Recipe> {
@@ -24,7 +29,7 @@ class Repository (
             baseDataSource.getRecipeByRequest(title)
         }
     }
-    suspend fun saveRecipe (recipe: Recipe) {
+    suspend fun saveRecipe (recipe: Recipe): Long {
         return saveDataSource.saveRecipe(recipe)
     }
 

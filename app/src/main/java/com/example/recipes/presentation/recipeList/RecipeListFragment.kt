@@ -12,20 +12,21 @@ import androidx.fragment.app.viewModels
 import com.example.recipes.R
 import com.example.recipes.RecipeApplication
 import com.example.recipes.data.network.RecipeApi.retrofitService
-import com.example.recipes.databinding.RandomRecipeFragmentBinding
+import com.example.recipes.databinding.RecipeListFragmentBinding
 import com.example.recipes.domain.RapidApiSource
 import com.example.recipes.domain.RecipeDataSource
 import com.example.recipes.domain.Repository
 import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDbMapper
 import com.example.recipes.domain.mappers.RecipeDtoMapper
+import com.example.recipes.presentation.recipe.RecipeArguments
 import com.example.recipes.presentation.recipe.RecipeFragment
 
 
-class RecipeListFragment : Fragment() {
-    private lateinit var binding: RandomRecipeFragmentBinding
+class RecipeListFragment: Fragment() {
+    private lateinit var binding: RecipeListFragmentBinding
     private val viewModel: RecipeListViewModel by viewModels {
-        RecipeListViewModel.RandomRecipeFactory(
+        RecipeListViewModel.RecipeListFactory(
 //            Repository(
 //                RapidApiSource(retrofitService, RecipeDtoMapper()),
 //                RecipeDataSource(
@@ -44,7 +45,7 @@ class RecipeListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = RandomRecipeFragmentBinding.inflate(inflater, container, false)
+        binding = RecipeListFragmentBinding.inflate(inflater, container, false)
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -66,7 +67,7 @@ class RecipeListFragment : Fragment() {
         val adapter = RecipeListAdapter {
             parentFragmentManager.beginTransaction()
                 .addToBackStack(null)
-                .replace(R.id.container, RecipeFragment.newInstance(it.id))
+                .replace(R.id.container, RecipeFragment.newInstance(RecipeArguments(it.id, true)))
                 .commit()
         }
 

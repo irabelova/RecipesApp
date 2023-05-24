@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Ingredients")
 data class IngredientsDb (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val ingredientsId: Int,
     val amount: Double,
     val unit: String,

@@ -12,7 +12,7 @@ class RecipeDataSource(
     private val recipeDbMapper: RecipeDbMapper
 ) : SaveDataSource {
 
-    override suspend fun saveRecipe(recipe: Recipe) = withContext(Dispatchers.IO) {
+    override suspend fun saveRecipe(recipe: Recipe): Long = withContext(Dispatchers.IO) {
         val recipeWithIngredients = recipeDbMapper.recipeToRecipeWithIngredients(recipe)
         val ingredientsIds = recipeWithIngredients.ingredientsDb.map {
             recipeDao.insertIngredient(it)
@@ -26,6 +26,7 @@ class RecipeDataSource(
                 )
             )
         }
+         recipeId
     }
 
     override suspend fun deleteRecipe(recipe: Recipe) {

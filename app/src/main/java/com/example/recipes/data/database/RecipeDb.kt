@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Recipe")
 data class RecipeDb (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val recipeId: Int,
     val title: String,
     val image: String?,

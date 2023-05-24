@@ -65,7 +65,7 @@ class RecipeListViewModel(private val repository: Repository, private val showOn
     }
 
 
-    class RandomRecipeFactory(private val repository: Repository, private val fragmentFlag: Boolean) : ViewModelProvider.Factory {
+    class RecipeListFactory(private val repository: Repository, private val fragmentFlag: Boolean) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return RecipeListViewModel(repository, fragmentFlag) as T
 

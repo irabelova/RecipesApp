@@ -10,7 +10,7 @@ import com.example.recipes.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class RecipeViewModel(private val repository: Repository, private val id: Int) : ViewModel() {
+class RecipeViewModel(private val repository: Repository, private val recipeArguments: RecipeArguments) : ViewModel() {
 
     private val _state = MutableLiveData<RecipeUiModel>()
     val state: LiveData<RecipeUiModel> = _state
@@ -89,7 +89,7 @@ class RecipeViewModel(private val repository: Repository, private val id: Int) :
         viewModelScope.launch {
             _state.value = RecipeUiModel.Loading
             try {
-                val recipe = repository.getRecipeById(id)
+                val recipe = repository.getRecipeById(recipeArguments.id, recipeArguments.isFromApiSource)
                 _state.value = RecipeUiModel.Data(recipe)
 
             } catch (e: Exception) {
@@ -99,10 +99,10 @@ class RecipeViewModel(private val repository: Repository, private val id: Int) :
         }
     }
 
-    class RecipeFactory(private val repository: Repository, private val id: Int) :
+    class RecipeFactory(private val repository: Repository, private val recipeArguments: RecipeArguments) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return RecipeViewModel(repository, id) as T
+            return RecipeViewModel(repository, recipeArguments) as T
 
         }
     }
