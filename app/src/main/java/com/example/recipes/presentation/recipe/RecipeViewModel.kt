@@ -69,6 +69,7 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
                 _state.value = data.copy(recipe = data.recipe.copy(isSaved = true))
             } catch (e: Exception) {
                 _errorOfSave.value = R.string.save_error
+                Log.e("RecipeViewModel", "Save error", e)
             }
         }
     }
@@ -81,6 +82,7 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
                 _deleteEvent.call()
             } catch (e: Exception) {
                 _errorOfSave.value = R.string.delete_error
+                Log.e("RecipeViewModel", "Delete error", e)
             }
         }
     }

@@ -8,4 +8,10 @@
         android:icon="@drawable/ic_like"
         app:showAsAction="always"
         android:title="@string/toolbar_like" />
+
+    <item
+        android:id="@+id/edit_item"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="ifRoom"
+        android:title="@string/toolbar_like" />
 </menu>

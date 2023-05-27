@@ -7,4 +7,6 @@ interface SaveDataSource: BaseDataSource {
     suspend fun saveRecipe (recipe: Recipe): Long
 
     suspend fun deleteRecipe(recipe: Recipe)
+
+    suspend fun updateRecipe(recipe: Recipe)
 }

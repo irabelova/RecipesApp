@@ -34,6 +34,10 @@ class Repository (
     }
 
     suspend fun deleteRecipe (recipe: Recipe) {
-        return saveDataSource.deleteRecipe(recipe)
+         saveDataSource.deleteRecipe(recipe)
+    }
+
+    suspend fun updateRecipe(recipe: Recipe) {
+        saveDataSource.updateRecipe(recipe)
     }
 }

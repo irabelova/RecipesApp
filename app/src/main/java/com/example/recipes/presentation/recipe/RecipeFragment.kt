@@ -2,7 +2,6 @@ package com.example.recipes.presentation.recipe
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -18,11 +17,11 @@ import com.example.recipes.domain.RecipeDataSource
 import com.example.recipes.domain.Repository
 import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDbMapper
+import com.example.recipes.presentation.addAndEditRecipe.AddAndEditRecipeFragment
 
 
 class RecipeFragment : Fragment() {
     private lateinit var binding: RecipeFragmentBinding
-    private var menu: Menu? = null
     private val viewModel: RecipeViewModel by viewModels() {
         RecipeViewModel.RecipeFactory(
 //            Repository(
@@ -37,8 +36,7 @@ class RecipeFragment : Fragment() {
                     (activity?.application as RecipeApplication).database.recipeDao(),
                     RecipeDbMapper()
                 )
-            ),
-            requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
+            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
         )
     }
 
@@ -62,7 +60,6 @@ class RecipeFragment : Fragment() {
                     it.recipe.image.let { image ->
                         binding.expandedImage.load(image) {
                             placeholder(R.drawable.loading_animation)
-                            error(R.drawable.ic_broken_image)
                         }
                     }
                     val convertedIngredients =
@@ -71,17 +68,25 @@ class RecipeFragment : Fragment() {
                     val convertedInstructions = viewModel.convertInstructions(it.recipe)
                     binding.instructions.text = convertedInstructions
                     binding.recipeTime.text = binding.root.context.getString(
-                        R.string.ready_in_minutes,
-                        it.recipe.readyInMinutes
+                        R.string.ready_in_minutes, it.recipe.readyInMinutes
                     )
                     showToolbar()
                     binding.toolbar.title = it.recipe.title
                     binding.expandedTitle.text = it.recipe.title
-                    binding.fab.setImageResource(
-                        if (it.recipe.isSaved) R.drawable.ic_favorite
-                        else R.drawable.ic_like
-                    )
-
+                    if (it.recipe.isSaved) {
+                        binding.fab.setImageResource(R.drawable.ic_favorite)
+                        binding.toolbar.menu.findItem(R.id.like_item)?.setIcon(
+                            R.drawable.ic_favorite)
+                        binding.editFab.isVisible = true
+                        binding.toolbar.menu.findItem(R.id.edit_item)?.isVisible = true
+                    }
+                    else {
+                        binding.fab.setImageResource(R.drawable.ic_like)
+                        binding.toolbar.menu.findItem(R.id.like_item)?.setIcon(
+                            R.drawable.ic_like)
+                        binding.editFab.isVisible = false
+                        binding.toolbar.menu.findItem(R.id.edit_item)?.isVisible = false
+                    }
                 }
                 RecipeUiModel.Error -> {
                     binding.statusContainer.visibility = View.VISIBLE
@@ -90,8 +95,7 @@ class RecipeFragment : Fragment() {
             }
         }
         viewModel.errorOfSave.observe(viewLifecycleOwner) {
-                Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG)
-                    .show()
+            Toast.makeText(requireContext(), getString(it), Toast.LENGTH_LONG).show()
         }
         viewModel.deleteEvent.observe(viewLifecycleOwner) {
             parentFragmentManager.setFragmentResult(DELETE_RECIPE_REQUEST_KEY, bundleOf())
@@ -99,6 +103,25 @@ class RecipeFragment : Fragment() {
         binding.fab.setOnClickListener {
             viewModel.saveOrDeleteRecipe()
         }
+        binding.editFab.setOnClickListener {
+            editAction()
+            }
+
+        binding.toolbar.menu.findItem(R.id.like_item).setOnMenuItemClickListener {
+            viewModel.saveOrDeleteRecipe()
+            true
+        }
+        binding.toolbar.menu.findItem(R.id.edit_item).setOnMenuItemClickListener {
+            editAction()
+            true
+        }
+    }
+
+    private fun editAction() {
+        parentFragmentManager.beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.container, AddAndEditRecipeFragment.newInstance((viewModel.state.value as? RecipeUiModel.Data)?.recipe))
+            .commit()
     }
 
     private fun showToolbar() {
@@ -107,23 +130,18 @@ class RecipeFragment : Fragment() {
             val scrollRange = appBarLayout.totalScrollRange
             if (scrollRange + verticalOffset == 0) {
                 isShow = true
-                toggleItemVisibility(R.id.like_item, true)
                 binding.toolbar.visibility = View.VISIBLE
                 binding.expandedTitle.isVisible = false
+                binding.editFab.isVisible = false
             } else if (isShow) {
                 isShow = false
-                toggleItemVisibility(R.id.like_item, false)
                 binding.expandedTitle.isVisible = true
+                binding.editFab.isVisible = true
                 binding.toolbar.visibility = View.INVISIBLE
             }
         }
     }
 
-
-    private fun toggleItemVisibility(id: Int, value: Boolean) {
-        val item = menu?.findItem(id)
-        item?.isVisible = value
-    }
 
     companion object {
         private const val RECIPE_ARGUMENTS_KEY = "RECIPE_ARGUMENTS_KEY"

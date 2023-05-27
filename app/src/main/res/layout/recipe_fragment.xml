@@ -114,6 +114,18 @@
                     app:layout_constraintTop_toBottomOf="@id/recipe_time"
                     tools:text="Список ингредиентов" />
 
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/edit_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/blue"
+                    app:tint="@color/white"
+                    android:contentDescription="@string/fab"
+                    app:srcCompat="@drawable/ic_edit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/extended_ingredients_name"
+                    app:layout_anchorGravity="end|clip_vertical" />
+
                 <TextView
                     android:id="@+id/extended_ingredients"
                     android:layout_width="match_parent"
@@ -155,6 +167,7 @@
                     app:layout_constraintTop_toBottomOf="@id/instructions_name"
                     tools:text="Этапы приготовления" />
 
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
@@ -169,6 +182,7 @@
             app:srcCompat="@drawable/ic_like"
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end" />
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <FrameLayout

@@ -28,6 +28,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ingredient_name_label"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"
@@ -46,6 +47,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ingredient_amount_label"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"
@@ -64,6 +66,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ingredient_unit_label"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"

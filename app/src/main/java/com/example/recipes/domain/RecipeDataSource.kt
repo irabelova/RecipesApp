@@ -31,17 +31,6 @@ class RecipeDataSource(
 
     override suspend fun deleteRecipe(recipe: Recipe) {
         val recipeWithIngredients = recipeDbMapper.recipeToRecipeWithIngredients(recipe)
-        val ingredientsIds = recipeWithIngredients.ingredientsDb.map {
-            it.ingredientsId.toLong()
-        }
-        ingredientsIds.forEach {
-            recipeDao.deleteRecipeIngredientsCrossRef(
-                RecipeIngredientsCrossRef(
-                    recipeId = recipeWithIngredients.recipeDb.recipeId.toLong(),
-                    ingredientsId = it
-                )
-            )
-        }
         recipeDao.deleteRecipe(recipeWithIngredients.recipeDb)
         recipeWithIngredients.ingredientsDb.forEach {
             recipeDao.deleteIngredient(it)
@@ -68,5 +57,10 @@ class RecipeDataSource(
             recipeListDb.map {
                 recipeDbMapper.recipeWithIngredientsToRecipe(it)
             }
+        }
+
+    override suspend fun updateRecipe(recipe: Recipe) =
+        withContext(Dispatchers.IO) {
+            recipeDao.updateRecipeWithIngredients(recipeDbMapper.recipeToRecipeWithIngredients(recipe))
         }
 }
