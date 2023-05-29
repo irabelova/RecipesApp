@@ -18,11 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.recipes.R
 import com.example.recipes.RecipeApplication
+import com.example.recipes.data.network.RecipeApi.retrofitService
 import com.example.recipes.databinding.AddAndEditRecipeFragmentBinding
+import com.example.recipes.domain.RapidApiSource
 import com.example.recipes.domain.RecipeDataSource
 import com.example.recipes.domain.Repository
-import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDbMapper
+import com.example.recipes.domain.mappers.RecipeDtoMapper
+import com.example.recipes.domain.mappers.VideoDtoMapper
 import com.example.recipes.domain.models.Ingredient
 import com.example.recipes.domain.models.Recipe
 import com.example.recipes.presentation.addAndEditIngredients.AddAndEditIngredientsFragment
@@ -31,24 +34,26 @@ import com.example.recipes.presentation.addAndEditIngredients.AddAndEditIngredie
 import com.example.recipes.presentation.addAndEditIngredients.AddAndEditIngredientsFragment.Companion.INGREDIENT_BUNDLE_KEY
 import com.example.recipes.presentation.recipe.RecipeArguments
 import com.example.recipes.presentation.recipe.RecipeFragment
+import com.example.recipes.utils.convertInstructions
 
 
 class AddAndEditRecipeFragment : Fragment() {
     private lateinit var binding: AddAndEditRecipeFragmentBinding
     private val viewModel: AddAndEditRecipeViewModel by viewModels {
         AddAndEditRecipeViewModel.AddAndEditRecipeFactory(
-//            Repository(
-//                RapidApiSource(retrofitService, RecipeDtoMapper()),
-//                RecipeDataSource(
-//                    (activity?.application as RecipeApplication).database.recipeDao(),
-//                    RecipeDbMapper()))
-//                ), requireArguments().getParcelable(EDIT_RECIPE_KEY)
             Repository(
-                FakeDataSource(), RecipeDataSource(
+                RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper()),
+                RecipeDataSource(
                     (activity?.application as RecipeApplication).database.recipeDao(),
-                    RecipeDbMapper()
-                )
-            ), arguments?.getParcelable(EDIT_RECIPE_KEY)
+                    RecipeDbMapper()),
+                RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper())
+                ), arguments?.getParcelable(EDIT_RECIPE_KEY)
+//            Repository(
+//                FakeDataSource(), RecipeDataSource(
+//                    (activity?.application as RecipeApplication).database.recipeDao(),
+//                    RecipeDbMapper()
+//                ), FakeDataSource()
+//            ), arguments?.getParcelable(EDIT_RECIPE_KEY)
         )
     }
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
@@ -131,7 +136,7 @@ class AddAndEditRecipeFragment : Fragment() {
                 binding.recipeInstructions.error = getString(R.string.fill_field)
             }
             if(it.value != binding.recipeInstructions.text.toString()) {
-                binding.recipeInstructions.setText(it.value)
+                binding.recipeInstructions.setText(it.value.convertInstructions())
             }
         }
         viewModel.extendedIngredients.observe(viewLifecycleOwner) {

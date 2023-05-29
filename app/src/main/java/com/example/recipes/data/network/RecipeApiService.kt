@@ -5,6 +5,7 @@ import com.example.recipes.BuildConfig.API_KEY
 import com.example.recipes.data.network.dto.RandomRecipeDto
 import com.example.recipes.data.network.dto.RecipeDto
 import com.example.recipes.data.network.dto.RecipeListDto
+import com.example.recipes.data.network.dto.VideoListDto
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -49,6 +50,14 @@ interface RecipeApiService {
         @Query("query") title: String,
         @Query("number") itemsNumber: Int = 5
     ): RecipeListDto
+
+    @GET("food/videos/search")
+    suspend fun getVideoList(
+        @Header("X-RapidAPI-Key") key: String = API_KEY,
+        @Header("X-RapidAPI-Host") host: String = API_HOST,
+        @Query("number") itemsNumber: Int = 3,
+        @Query("query") title: String
+    ): VideoListDto
 }
 
 object RecipeApi {

@@ -1,14 +1,16 @@
 package com.example.recipes.domain.fakedatasource
 
 import com.example.recipes.domain.BaseDataSource
+import com.example.recipes.domain.VideoDataSource
 import com.example.recipes.domain.models.Ingredient
 import com.example.recipes.domain.models.Recipe
+import com.example.recipes.domain.models.Video
 import kotlinx.coroutines.delay
 
-class FakeDataSource : BaseDataSource {
+class FakeDataSource : BaseDataSource, VideoDataSource {
     private val defaultIngredients1 = Ingredient (
         id = 11,
-        amount = 0.666667,
+        amount = 1.0,
         unit = "",
         name = "tomato"
     )
@@ -50,7 +52,26 @@ class FakeDataSource : BaseDataSource {
         readyInMinutes = 25,
         extendedIngredients = listOf()
         )
-    private val list = listOf(
+
+    private val defaultVideo1 = Video (
+        youTubeId = "5qlIPTDE274",
+        title = "Android Jetpack: ViewModel",
+        thumbnail = "https://i.ytimg.com/vi/5qlIPTDE274/mqdefault.jpg"
+    )
+
+    private val defaultVideo2 = Video (
+        youTubeId = "OMcDk2_4LSk",
+        title = "Android Jetpack: LiveData",
+        thumbnail = "https://i.ytimg.com/vi/OMcDk2_4LSk/mqdefault.jpg"
+    )
+
+    private val defaultVideo3 = Video (
+        youTubeId = "LmkKFCfmnhQ",
+        title = "Introducing Android Jetpack",
+        thumbnail = "https://i.ytimg.com/vi/LmkKFCfmnhQ/mqdefault.jpg"
+    )
+
+    private val recipeList = listOf(
         defaultRecipe,
         defaultRecipe2,
         defaultRecipe3,
@@ -62,18 +83,32 @@ class FakeDataSource : BaseDataSource {
         defaultRecipe3
     )
 
+    private val videoList = listOf(
+        defaultVideo1,
+        defaultVideo2,
+        defaultVideo3,
+        defaultVideo1,
+        defaultVideo2,
+        defaultVideo3
+    )
+
     override suspend fun getRandomRecipe(): List<Recipe> {
         delay(1000)
-        return list
+        return recipeList
     }
 
     override suspend fun getRecipeById(id: Int): Recipe {
         delay(1000)
-        return list.first { it.id == id }
+        return recipeList.first { it.id == id }
     }
 
     override suspend fun getRecipeByRequest(title: String): List<Recipe> {
         delay(1000)
-        return list.filter { it.title.contains(title, ignoreCase = true) }
+        return recipeList.filter { it.title.contains(title, ignoreCase = true) }
+    }
+
+    override suspend fun getVideoList(title: String): List<Video> {
+        delay(1000)
+        return videoList.filter { it.title.contains(title, ignoreCase = true) }
     }
 }

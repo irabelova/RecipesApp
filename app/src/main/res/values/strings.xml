@@ -1,34 +1,34 @@
 <resources>
     <string name="app_name">Recipes</string>
-    <string name="bottom_navigation_recipes">Рецепты</string>
-    <string name="bottom_navigation_search">Поиск</string>
-    <string name="bottom_navigation_favorites">Избранное</string>
-    <string name="bottom_navigation_add_recipe">Добавить</string>
-    <string name="status_image">status_image</string>
-    <string name="ready_in_minutes">Время приготовления: %d мин.</string>
+    <string name="bottom_navigation_recipes">Recipes</string>
+    <string name="bottom_navigation_favorites">Favorites</string>
+    <string name="bottom_navigation_add_recipe">Add recipe</string>
+    <string name="status_image">Status image</string>
+    <string name="ready_in_minutes">Ready in minutes: %d</string>
     <string name="fab">FAB</string>
-    <string name="extended_ingredients_name">Список ингредиентов:</string>
-    <string name="instructions_name">Как приготовить:</string>
-    <string name="recipe_photo">recipe_photo</string>
+    <string name="extended_ingredients_name">Ingredient list:</string>
+    <string name="instructions_name">How to cook:</string>
+    <string name="recipe_photo">Recipe photo</string>
     <string name="toolbar_like">Toolbar like</string>
-    <string name="Pasta_with_salmon">Паста с лососем</string>
-    <string name="Search">Поиск</string>
-    <string name="search_image">search_image</string>
-    <string name="save_error">Ошибка сохранения</string>
-    <string name="delete_error">Ошибка удаления</string>
-    <string name="recipe_title">Наименование рецепта<font color='#FF0000'>*</font></string>
-    <string name="cooking_time">Время приготовления, мин.<font color='#FF0000'>*</font></string>
-    <string name="recipe_instructions_name">Этапы приготовления<font color='#FF0000'>*</font></string>
-    <string name="save_action">Сохранить</string>
-    <string name="add_ingredients_required">Добавьте необходимые ингредиенты<font color='#FF0000'>*</font></string>
-    <string name="ingredient_name">Наименование ингредиента</string>
-    <string name="ingredient_name_required">Наименование ингредиента<font color='#FF0000'>*</font></string>
-    <string name="ingredient_amount">Кол-во</string>
-    <string name="ingredient_unit">Единица измерения</string>
-    <string name="add_your_recipe">Добавьте свой собственный рецепт</string>
-    <string name="ingredient_amount_required">Количество<font color='#FF0000'>*</font></string>
-    <string name="add_ingredient">Добавьте ингредиент</string>
-    <string name="fill_field">Заполните поле</string>
-    <string name="add_ingredients">Добавьте ингредиенты</string>
-    <string name="add_photo">ДОБАВИТЬ ФОТО</string>
+    <string name="Pasta_with_salmon">Pasta with salmon</string>
+    <string name="search_image">Search image</string>
+    <string name="save_error">Save error</string>
+    <string name="delete_error">Deletion error</string>
+    <string name="recipe_title">Recipe name<font color='#FF0000'>*</font></string>
+    <string name="cooking_time">Ready in minutes<font color='#FF0000'>*</font></string>
+    <string name="recipe_instructions_name">Method<font color='#FF0000'>*</font></string>
+    <string name="save_action">Save</string>
+    <string name="add_ingredients_required">Add ingredients<font color='#FF0000'>*</font></string>
+    <string name="ingredient_name">Ingredient name</string>
+    <string name="ingredient_name_required">Ingredient name<font color='#FF0000'>*</font></string>
+    <string name="ingredient_amount">Amount</string>
+    <string name="ingredient_unit">Measure</string>
+    <string name="add_your_recipe">Add your recipe</string>
+    <string name="ingredient_amount_required">Amount<font color='#FF0000'>*</font></string>
+    <string name="add_ingredient">Add ingredient</string>
+    <string name="fill_field">Fill in the field</string>
+    <string name="add_ingredients">Please add ingredients</string>
+    <string name="add_photo">ADD PHOTO</string>
+    <string name="video">Video</string>
+    <string name="chiken">Chiken</string>
 </resources>

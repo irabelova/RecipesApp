@@ -12,32 +12,37 @@ import androidx.fragment.app.viewModels
 import coil.load
 import com.example.recipes.R
 import com.example.recipes.RecipeApplication
+import com.example.recipes.data.network.RecipeApi.retrofitService
 import com.example.recipes.databinding.RecipeFragmentBinding
+import com.example.recipes.domain.RapidApiSource
 import com.example.recipes.domain.RecipeDataSource
 import com.example.recipes.domain.Repository
-import com.example.recipes.domain.fakedatasource.FakeDataSource
 import com.example.recipes.domain.mappers.RecipeDbMapper
+import com.example.recipes.domain.mappers.RecipeDtoMapper
+import com.example.recipes.domain.mappers.VideoDtoMapper
 import com.example.recipes.presentation.addAndEditRecipe.AddAndEditRecipeFragment
+import com.example.recipes.utils.convertIngredients
+import com.example.recipes.utils.convertInstructions
 
 
 class RecipeFragment : Fragment() {
     private lateinit var binding: RecipeFragmentBinding
     private val viewModel: RecipeViewModel by viewModels() {
         RecipeViewModel.RecipeFactory(
+            Repository(
+                RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper()),
+                RecipeDataSource(
+                    (activity?.application as RecipeApplication).database.recipeDao(),
+                    RecipeDbMapper()),
+                RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper())
+                ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!)
 //            Repository(
-//                RapidApiSource(retrofitService, RecipeDtoMapper()),
-//                RecipeDataSource(
+//                FakeDataSource(), RecipeDataSource(
 //                    (activity?.application as RecipeApplication).database.recipeDao(),
 //                    RecipeDbMapper()
-//                )
-//            ),
-            Repository(
-                FakeDataSource(), RecipeDataSource(
-                    (activity?.application as RecipeApplication).database.recipeDao(),
-                    RecipeDbMapper()
-                )
-            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
-        )
+//                ), FakeDataSource()
+//            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
+//        )
     }
 
     override fun onCreateView(
@@ -62,10 +67,9 @@ class RecipeFragment : Fragment() {
                             placeholder(R.drawable.loading_animation)
                         }
                     }
-                    val convertedIngredients =
-                        viewModel.convertIngredients(it.recipe.extendedIngredients)
+                    val convertedIngredients = it.recipe.extendedIngredients.convertIngredients()
                     binding.extendedIngredients.text = convertedIngredients
-                    val convertedInstructions = viewModel.convertInstructions(it.recipe)
+                    val convertedInstructions = it.recipe.instructions.convertInstructions()
                     binding.instructions.text = convertedInstructions
                     binding.recipeTime.text = binding.root.context.getString(
                         R.string.ready_in_minutes, it.recipe.readyInMinutes
