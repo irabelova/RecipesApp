@@ -15,6 +15,7 @@ class RecipeListViewModel(private val repository: Repository, private val showOn
 
     private val _state = MutableLiveData<RecipeListUiModel>()
     val state: LiveData<RecipeListUiModel> = _state
+    private var searchPerformed = false
 
     private val searchQuery = MutableStateFlow("")
 
@@ -27,6 +28,7 @@ class RecipeListViewModel(private val repository: Repository, private val showOn
 
     fun setTitle(title: String) {
         searchQuery.value = title
+        searchPerformed = true
     }
 
      fun getRecipe() {
@@ -56,7 +58,7 @@ class RecipeListViewModel(private val repository: Repository, private val showOn
                         Log.e("RecipeViewModel", "", e)
                         _state.value = RecipeListUiModel.Error
                     }
-                } else if (it.isEmpty()) {
+                } else if (it.isEmpty() && searchPerformed) {
                     getRecipe()
                 }
             }

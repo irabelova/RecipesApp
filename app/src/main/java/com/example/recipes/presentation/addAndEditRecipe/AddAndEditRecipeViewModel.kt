@@ -144,8 +144,7 @@ class AddAndEditRecipeViewModel(
     private fun saveRecipe(recipe: Recipe) {
         viewModelScope.launch {
             try {
-                val id = repository.saveRecipe(recipe)
-                _id.value = id.toInt()
+                _id.value = repository.saveRecipe(recipe).toInt()
             } catch (e: Exception) {
                 _errorOfSave.value = R.string.save_error
                 e.printStackTrace()
