@@ -17,13 +17,13 @@ interface RecipeDao {
     @Query("SELECT * FROM Recipe WHERE title LIKE '%' || :title || '%'")
     fun getRecipeByRequest(title: String): List<RecipeWithIngredients>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRecipe(recipeDb: RecipeDb): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIngredient(ingredientsDb: IngredientsDb): Long
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insertRecipeIngredientsCrossRef(recipeIngredientsCrossRef: RecipeIngredientsCrossRef)
 
     @Delete
@@ -42,6 +42,20 @@ interface RecipeDao {
     suspend fun updateIngredient(ingredientsDb: IngredientsDb)
 
     @Transaction
+    @Query("SELECT * FROM IngredientsToRecipes")
+    fun getIngredientsToRecipes(): List<RecipeIngredientsCrossRef>
+    @Transaction
+    suspend fun deleteRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
+        deleteRecipe(recipeWithIngredients.recipeDb)
+        val existingRefs = getIngredientsToRecipes()
+        recipeWithIngredients.ingredientsDb.forEach { ingredient ->
+            if(existingRefs.find { it.ingredientsId == ingredient.ingredientsId.toLong() } == null) {
+                deleteIngredient(ingredient)
+            }
+        }
+    }
+
+    @Transaction
     suspend fun updateRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
         val oldRecipe = getRecipeById(recipeWithIngredients.recipeDb.recipeId)
         if (oldRecipe != null) {
@@ -52,6 +66,7 @@ interface RecipeDao {
                     val id = insertIngredient(it)
                     insertRecipeIngredientsCrossRef(
                         RecipeIngredientsCrossRef(
+                            crossId = 0,
                             recipeId = recipeWithIngredients.recipeDb.recipeId.toLong(),
                             ingredientsId = id
                         )
@@ -65,7 +80,6 @@ interface RecipeDao {
                     deleteIngredient(it)
                 }
             }
-
             updateRecipe(recipeWithIngredients.recipeDb)
         }
 

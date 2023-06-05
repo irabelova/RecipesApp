@@ -26,6 +26,12 @@ class FakeDataSource : BaseDataSource, VideoDataSource {
         unit = "teaspoon",
         name = "red pepper"
     )
+    private val defaultIngredients4 = Ingredient (
+        id = 14,
+        amount = 2.5,
+        unit = "teaspoon",
+        name = "sugar"
+    )
 
     private val defaultRecipe = Recipe(
         id = 1,
@@ -42,7 +48,7 @@ class FakeDataSource : BaseDataSource, VideoDataSource {
         image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4ehfDVe_Y5YuvJ7oc14SWbndJyWn5Ya49cQ&usqp=CAU",
         instructions = "",
         readyInMinutes = 65,
-        extendedIngredients = listOf()
+        extendedIngredients = listOf(defaultIngredients2, defaultIngredients3, defaultIngredients4)
     )
     private val defaultRecipe3 = Recipe(
         id = 3,

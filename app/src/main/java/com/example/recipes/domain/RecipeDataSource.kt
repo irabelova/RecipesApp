@@ -18,11 +18,12 @@ class RecipeDataSource(
             recipeDao.insertIngredient(it)
         }
         val recipeId = recipeDao.insertRecipe(recipeWithIngredients.recipeDb)
-        ingredientsIds.forEach {
+        ingredientsIds.forEachIndexed() { index, id ->
             recipeDao.insertRecipeIngredientsCrossRef(
                 RecipeIngredientsCrossRef(
+                    crossId = 0,
                     recipeId = recipeId,
-                    ingredientsId = it
+                    ingredientsId = if(id == -1L) recipeWithIngredients.ingredientsDb[index].ingredientsId.toLong() else id
                 )
             )
         }
@@ -30,11 +31,7 @@ class RecipeDataSource(
     }
 
     override suspend fun deleteRecipe(recipe: Recipe) {
-        val recipeWithIngredients = recipeDbMapper.recipeToRecipeWithIngredients(recipe)
-        recipeDao.deleteRecipe(recipeWithIngredients.recipeDb)
-        recipeWithIngredients.ingredientsDb.forEach {
-            recipeDao.deleteIngredient(it)
-        }
+        recipeDao.deleteRecipeWithIngredients(recipeDbMapper.recipeToRecipeWithIngredients(recipe))
     }
 
     override suspend fun getRandomRecipe(): List<Recipe> = withContext(Dispatchers.IO) {
