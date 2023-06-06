@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -27,22 +28,23 @@ import com.example.recipes.utils.convertInstructions
 
 class RecipeFragment : Fragment() {
     private lateinit var binding: RecipeFragmentBinding
-    private val viewModel: RecipeViewModel by viewModels() {
+    private val viewModel: RecipeViewModel by viewModels {
         RecipeViewModel.RecipeFactory(
             Repository(
                 RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper()),
                 RecipeDataSource(
                     (activity?.application as RecipeApplication).database.recipeDao(),
-                    RecipeDbMapper()),
+                    RecipeDbMapper()
+                ),
                 RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper())
-                ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!)
+            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
+        )
 //            Repository(
 //                FakeDataSource(), RecipeDataSource(
 //                    (activity?.application as RecipeApplication).database.recipeDao(),
 //                    RecipeDbMapper()
 //                ), FakeDataSource()
-//            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!
-//        )
+//            ), requireArguments().getParcelable(RECIPE_ARGUMENTS_KEY)!!)
     }
 
     override fun onCreateView(
@@ -80,14 +82,15 @@ class RecipeFragment : Fragment() {
                     if (it.recipe.isSaved) {
                         binding.fab.setImageResource(R.drawable.ic_favorite)
                         binding.toolbar.menu.findItem(R.id.like_item)?.setIcon(
-                            R.drawable.ic_favorite)
+                            R.drawable.ic_favorite
+                        )
                         binding.editFab.isVisible = true
                         binding.toolbar.menu.findItem(R.id.edit_item)?.isVisible = true
-                    }
-                    else {
+                    } else {
                         binding.fab.setImageResource(R.drawable.ic_like)
                         binding.toolbar.menu.findItem(R.id.like_item)?.setIcon(
-                            R.drawable.ic_like)
+                            R.drawable.ic_like
+                        )
                         binding.editFab.isVisible = false
                         binding.toolbar.menu.findItem(R.id.edit_item)?.isVisible = false
                     }
@@ -104,12 +107,16 @@ class RecipeFragment : Fragment() {
         viewModel.deleteEvent.observe(viewLifecycleOwner) {
             parentFragmentManager.setFragmentResult(DELETE_RECIPE_REQUEST_KEY, bundleOf())
         }
+
         binding.fab.setOnClickListener {
             viewModel.saveOrDeleteRecipe()
         }
+        viewModel.showAlertDialog.observe(viewLifecycleOwner) {
+            showRecipeDialog(it)
+        }
         binding.editFab.setOnClickListener {
             editAction()
-            }
+        }
 
         binding.toolbar.menu.findItem(R.id.like_item).setOnMenuItemClickListener {
             viewModel.saveOrDeleteRecipe()
@@ -121,10 +128,29 @@ class RecipeFragment : Fragment() {
         }
     }
 
+    private fun showRecipeDialog(data: RecipeUiModel.Data) {
+        val builder = AlertDialog.Builder(requireActivity())
+        builder.setTitle(R.string.delete)
+        builder.setMessage(R.string.alert_dialog_message)
+        builder.setIcon(R.drawable.ic_delete)
+        builder.setPositiveButton(R.string.yes) { _, _ ->
+            viewModel.deleteRecipe(data)
+        }
+        builder.setNegativeButton(R.string.no) { dialog, _ ->
+            dialog.cancel()
+        }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.setCancelable(true)
+        alertDialog.show()
+    }
+
     private fun editAction() {
         parentFragmentManager.beginTransaction()
             .addToBackStack(null)
-            .replace(R.id.container, AddAndEditRecipeFragment.newInstance((viewModel.state.value as? RecipeUiModel.Data)?.recipe))
+            .replace(
+                R.id.container,
+                AddAndEditRecipeFragment.newInstance((viewModel.state.value as? RecipeUiModel.Data)?.recipe)
+            )
             .commit()
     }
 

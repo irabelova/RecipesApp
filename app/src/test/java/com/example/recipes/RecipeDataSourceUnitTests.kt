@@ -56,8 +56,7 @@ internal class RecipeDataSourceUnitTests {
             .thenReturn(recipeWithIngredients)
         val recipeDataSource = createRecipeDataSource()
         recipeDataSource.deleteRecipe(defaultRecipe)
-        verify(recipeDao, times(1)).deleteIngredient(ingredientDb)
-        verify(recipeDao, times(1)).deleteRecipe(recipeDb)
+        verify(recipeDao, times(1)).deleteRecipeWithIngredients(recipeWithIngredients)
         verify(recipeDbMapper, times(1)).recipeToRecipeWithIngredients(defaultRecipe)
     }
 

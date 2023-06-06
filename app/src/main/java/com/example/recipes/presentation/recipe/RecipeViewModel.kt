@@ -7,7 +7,9 @@ import com.example.recipes.domain.Repository
 import com.example.recipes.utils.SingleLiveEvent
 import kotlinx.coroutines.launch
 
-class RecipeViewModel(private val repository: Repository, private val recipeArguments: RecipeArguments) : ViewModel() {
+class RecipeViewModel(
+    private val repository: Repository,
+    private val recipeArguments: RecipeArguments) : ViewModel() {
 
     private val _state = MutableLiveData<RecipeUiModel>()
     val state: LiveData<RecipeUiModel> = _state
@@ -18,6 +20,9 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
     private val _deleteEvent = SingleLiveEvent<Unit>()
     val deleteEvent: LiveData<Unit> = _deleteEvent
 
+    private val _showAlertDialog = SingleLiveEvent<RecipeUiModel.Data>()
+    val showAlertDialog: LiveData<RecipeUiModel.Data> = _showAlertDialog
+
     init {
         getRecipeById()
     }
@@ -26,9 +31,23 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
         val data = state.value as? RecipeUiModel.Data
         data?.let {
             if (it.recipe.isSaved) {
-                deleteRecipe(it)
+                _showAlertDialog.value = it
             } else {
                 saveRecipe(it)
+            }
+        }
+    }
+
+
+    fun deleteRecipe(data: RecipeUiModel.Data) {
+        viewModelScope.launch {
+            try {
+                repository.deleteRecipe(data.recipe)
+                _state.value = data.copy(recipe = data.recipe.copy(isSaved = false))
+                _deleteEvent.call()
+            } catch (e: Exception) {
+                _errorOfSave.value = R.string.delete_error
+                Log.e("RecipeViewModel", "Delete error", e)
             }
         }
     }
@@ -41,19 +60,6 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
             } catch (e: Exception) {
                 _errorOfSave.value = R.string.save_error
                 Log.e("RecipeViewModel", "Save error", e)
-            }
-        }
-    }
-
-    private fun deleteRecipe(data: RecipeUiModel.Data) {
-        viewModelScope.launch {
-            try {
-                repository.deleteRecipe(data.recipe)
-                _state.value = data.copy(recipe = data.recipe.copy(isSaved = false))
-                _deleteEvent.call()
-            } catch (e: Exception) {
-                _errorOfSave.value = R.string.delete_error
-                Log.e("RecipeViewModel", "Delete error", e)
             }
         }
     }
@@ -72,7 +78,9 @@ class RecipeViewModel(private val repository: Repository, private val recipeArgu
         }
     }
 
-    class RecipeFactory(private val repository: Repository, private val recipeArguments: RecipeArguments) :
+    class RecipeFactory(
+        private val repository: Repository,
+        private val recipeArguments: RecipeArguments):
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return RecipeViewModel(repository, recipeArguments) as T

@@ -47,14 +47,13 @@ class AddAndEditRecipeFragment : Fragment() {
                     (activity?.application as RecipeApplication).database.recipeDao(),
                     RecipeDbMapper()),
                 RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper())
-                ), arguments?.getParcelable(EDIT_RECIPE_KEY)
+                ), arguments?.getParcelable(EDIT_RECIPE_KEY))
 //            Repository(
 //                FakeDataSource(), RecipeDataSource(
 //                    (activity?.application as RecipeApplication).database.recipeDao(),
 //                    RecipeDbMapper()
 //                ), FakeDataSource()
-//            ), arguments?.getParcelable(EDIT_RECIPE_KEY)
-        )
+//            ), arguments?.getParcelable(EDIT_RECIPE_KEY))
     }
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 

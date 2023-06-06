@@ -33,14 +33,13 @@ class RecipeListFragment: Fragment() {
                     (activity?.application as RecipeApplication).database.recipeDao(),
                     RecipeDbMapper()),
                 RapidApiSource(retrofitService, RecipeDtoMapper(), VideoDtoMapper())
-            ), requireArguments().getBoolean(SHOW_ONLY_SAVED_FLAG)
+            ), requireArguments().getBoolean(SHOW_ONLY_SAVED_FLAG))
 //            Repository(
 //                FakeDataSource(), RecipeDataSource(
 //                    (activity?.application as RecipeApplication).database.recipeDao(),
 //                    RecipeDbMapper()
 //                ), FakeDataSource()
-//            ), requireArguments().getBoolean(SHOW_ONLY_SAVED_FLAG)
-        )
+//            ), requireArguments().getBoolean(SHOW_ONLY_SAVED_FLAG))
     }
 
     override fun onCreateView(

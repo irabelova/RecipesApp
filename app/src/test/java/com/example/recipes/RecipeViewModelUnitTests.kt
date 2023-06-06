@@ -116,7 +116,7 @@ internal class RecipeViewModelUnitTests {
     }
 
     @Test
-    fun `delete recipe with data state test`() = runTest {
+    fun `save or delete recipe with data state test`() = runTest {
         recipeArguments = RecipeArguments(1, false)
         val savedRecipe = defaultRecipe.copy(isSaved = true)
         Mockito.`when`(
@@ -128,16 +128,19 @@ internal class RecipeViewModelUnitTests {
             .thenReturn(savedRecipe)
         val viewModel = createViewModel()
         viewModel.saveOrDeleteRecipe()
-        verify(repository, times(1)).deleteRecipe(savedRecipe)
-        verify(repository, times(0)).saveRecipe(savedRecipe)
+        verify(repository, times(0)).deleteRecipe(savedRecipe)
         TestCase.assertEquals(
-            RecipeUiModel.Data(defaultRecipe.copy(isSaved = false)),
+            RecipeUiModel.Data(savedRecipe),
             viewModel.state.value
+        )
+        TestCase.assertEquals(
+            RecipeUiModel.Data(savedRecipe),
+            viewModel.showAlertDialog.value
         )
     }
 
     @Test
-    fun `delete recipe with error state test`() = runTest {
+    fun `save or delete recipe with error state test`() = runTest {
         recipeArguments = RecipeArguments(1, false)
         val savedRecipe = defaultRecipe.copy(isSaved = true)
         Mockito.`when`(
@@ -146,12 +149,36 @@ internal class RecipeViewModelUnitTests {
                 recipeArguments.isFromApiSource
             )
         )
-            .thenReturn(savedRecipe)
-        Mockito.`when`(repository.deleteRecipe(savedRecipe)).thenThrow(RuntimeException())
+            .thenThrow(RuntimeException())
         val viewModel = createViewModel()
         viewModel.saveOrDeleteRecipe()
+        verify(repository, times(0)).deleteRecipe(savedRecipe)
+        TestCase.assertEquals(
+            RecipeUiModel.Error,
+            viewModel.state.value
+        )
+        TestCase.assertEquals(
+            null,
+            viewModel.showAlertDialog.value
+        )
+    }
+
+    @Test
+    fun `delete recipe with data state test`() = runTest {
+        val savedRecipe = defaultRecipe.copy(isSaved = true)
+        val viewModel = createViewModel()
+        viewModel.deleteRecipe(RecipeUiModel.Data(savedRecipe))
         verify(repository, times(1)).deleteRecipe(savedRecipe)
-        verify(repository, times(0)).saveRecipe(savedRecipe)
+        TestCase.assertEquals(RecipeUiModel.Data(defaultRecipe), viewModel.state.value)
+    }
+
+    @Test
+    fun `delete recipe with error state test`() = runTest {
+        val savedRecipe = defaultRecipe.copy(isSaved = true)
+        Mockito.`when`(repository.deleteRecipe(savedRecipe)).thenThrow(RuntimeException())
+        val viewModel = createViewModel()
+        viewModel.deleteRecipe(RecipeUiModel.Data(savedRecipe))
+        verify(repository, times(1)).deleteRecipe(savedRecipe)
         TestCase.assertEquals(R.string.delete_error, viewModel.errorOfSave.value)
     }
 }
