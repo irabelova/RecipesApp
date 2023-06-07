@@ -162,11 +162,9 @@ class RecipeFragment : Fragment() {
                 isShow = true
                 binding.toolbar.visibility = View.VISIBLE
                 binding.expandedTitle.isVisible = false
-                binding.editFab.isVisible = false
             } else if (isShow) {
                 isShow = false
                 binding.expandedTitle.isVisible = true
-                binding.editFab.isVisible = true
                 binding.toolbar.visibility = View.INVISIBLE
             }
         }

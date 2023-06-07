@@ -44,12 +44,13 @@ interface RecipeDao {
     @Transaction
     @Query("SELECT * FROM IngredientsToRecipes")
     fun getIngredientsToRecipes(): List<RecipeIngredientsCrossRef>
+
     @Transaction
     suspend fun deleteRecipeWithIngredients(recipeWithIngredients: RecipeWithIngredients) {
         deleteRecipe(recipeWithIngredients.recipeDb)
         val existingRefs = getIngredientsToRecipes()
         recipeWithIngredients.ingredientsDb.forEach { ingredient ->
-            if(existingRefs.find { it.ingredientsId == ingredient.ingredientsId.toLong() } == null) {
+            if (existingRefs.find { it.ingredientsId == ingredient.ingredientsId.toLong() } == null) {
                 deleteIngredient(ingredient)
             }
         }
@@ -75,9 +76,9 @@ interface RecipeDao {
                     updateIngredient(it)
                 }
             }
-            oldRecipe.ingredientsDb.forEach {
-                if (!recipeWithIngredients.ingredientsDb.contains(it)) {
-                    deleteIngredient(it)
+            oldRecipe.ingredientsDb.forEach { oldIngredient ->
+                if (recipeWithIngredients.ingredientsDb.find { oldIngredient.ingredientsId == it.ingredientsId } == null) {
+                    deleteIngredient(oldIngredient)
                 }
             }
             updateRecipe(recipeWithIngredients.recipeDb)
